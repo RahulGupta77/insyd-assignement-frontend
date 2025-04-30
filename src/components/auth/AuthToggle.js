@@ -8,35 +8,40 @@ const AuthToggle = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="mb-6 flex">
+    <div className="max-w-md w-full mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+      {/* Tab Buttons */}
+      <div className="grid grid-cols-2">
         <button
-          className={`flex-1 py-3 text-center font-medium ${
+          className={`py-4 text-center font-medium transition-colors duration-300 ${
             isLogin
-              ? "bg-purple-600 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              ? "text-purple-600 border-b-2 border-purple-600"
+              : "text-gray-500 hover:text-gray-700 border-white"
           }`}
           onClick={() => setIsLogin(true)}
         >
           Login
         </button>
         <button
-          className={`flex-1 py-3 text-center font-medium ${
+          className={`py-4 text-center font-medium transition-colors duration-300 ${
             !isLogin
-              ? "bg-purple-600 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              ? "text-purple-600 border-b-2 border-purple-600"
+              : "text-gray-500 hover:text-gray-700 border-white"
           }`}
           onClick={() => setIsLogin(false)}
         >
-          Signup
+          Sign up
         </button>
       </div>
 
-      <div className="form-container">
+      {/* Form Container */}
+      <div className="p-6">
         {isLogin ? (
-          <LoginForm />
+          <LoginForm onToggleForm={setIsLogin} />
         ) : (
-          <SignupForm onSuccess={() => setIsLogin(true)} />
+          <SignupForm
+            onSuccess={() => setIsLogin(true)}
+            onToggleForm={setIsLogin}
+          />
         )}
       </div>
     </div>

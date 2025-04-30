@@ -30,10 +30,7 @@ export default function Home() {
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center">
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Auth App</h1>
-        <p className="text-xl text-gray-600 max-w-md mx-auto">
-          Sign up or log in to access your account.
-        </p>
+        <h1 className="text-4xl font-bold mb-4">Welcome to Insyd</h1>
       </div>
 
       <AuthToggle />

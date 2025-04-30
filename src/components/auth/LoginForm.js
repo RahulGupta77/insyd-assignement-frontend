@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { validatePassword, validateUsername } from "../../utils/validation";
+import PasswordInput from "./PasswordInput";
 
-const LoginForm = () => {
+const LoginForm = ({ onToggleForm }) => {
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: "",
@@ -20,7 +21,6 @@ const LoginForm = () => {
       [name]: value,
     }));
 
-    // Clear error when user types
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -48,17 +48,12 @@ const LoginForm = () => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
     setTimeout(() => {
       try {
-        // In a real app, you would verify credentials with a backend
-        // For demo purposes, we'll just log the user in
         login({
           username: formData.username,
-          // Don't include password in user object for security
         });
 
-        // Form submission successful
         setFormData({
           username: "",
           password: "",
@@ -74,57 +69,100 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold mb-6">Login to your account</h2>
+    <div className="min-h-[340px]">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Welcome back</h2>
 
-      {errors.general && (
-        <div className="p-3 bg-red-100 text-red-700 rounded-md">
-          {errors.general}
+      <div className="space-y-5">
+        {errors.general && (
+          <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+            {errors.general}
+          </div>
+        )}
+
+        <div>
+          <label
+            htmlFor="username"
+            className="block mb-2 text-sm font-medium text-gray-700"
+          >
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            className={`w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:outline-none transition-all duration-200 ${
+              errors.username
+                ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-200"
+            }`}
+            value={formData.username}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            placeholder="Enter your username"
+          />
+          {errors.username && (
+            <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+          )}
         </div>
-      )}
 
-      <div>
-        <label htmlFor="username" className="block mb-1 font-medium">
-          Username
-        </label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          className="input-field"
-          value={formData.username}
-          onChange={handleChange}
-          disabled={isSubmitting}
-        />
-        {errors.username && <p className="form-error">{errors.username}</p>}
-      </div>
-
-      <div>
-        <label htmlFor="password" className="block mb-1 font-medium">
-          Password
-        </label>
-        <input
-          type="password"
+        <PasswordInput
           id="password"
           name="password"
-          className="input-field"
           value={formData.password}
           onChange={handleChange}
           disabled={isSubmitting}
+          error={errors.password}
+          placeholder="Enter your password"
         />
-        {errors.password && <p className="form-error">{errors.password}</p>}
-      </div>
 
-      <div className="pt-2">
-        <button
-          type="submit"
-          className="btn btn-primary w-full"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? <span>Logging in...</span> : <span>Login</span>}
-        </button>
+        <div className="pt-2">
+          <button
+            onClick={handleSubmit}
+            className="w-full px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Logging in...
+              </span>
+            ) : (
+              "Log In"
+            )}
+          </button>
+        </div>
+
+        <p className="text-center mt-4 text-sm text-gray-600">
+          Dont have an account?{" "}
+          <button
+            type="button"
+            onClick={() => onToggleForm && onToggleForm(false)}
+            className="text-purple-600 font-medium hover:text-purple-800"
+          >
+            Sign up
+          </button>
+        </p>
       </div>
-    </form>
+    </div>
   );
 };
 

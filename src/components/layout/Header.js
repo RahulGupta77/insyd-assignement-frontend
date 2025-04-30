@@ -10,7 +10,7 @@ const Header = () => {
     <header className="bg-purple-800 text-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-xl font-bold">
-          Auth App
+          Insyd
         </Link>
 
         <nav>
@@ -34,7 +34,7 @@ const Header = () => {
             ) : (
               <li>
                 <Link href="/" className="hover:text-purple-200">
-                  Login / Signup
+                  Home
                 </Link>
               </li>
             )}
