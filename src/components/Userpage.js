@@ -111,7 +111,7 @@ export default function UserPage({ userId }) {
         {/* Notifications Accordions */}
         <div className="mt-3">
           <details className="mb-4">
-            <summary className="cursor-pointer font-medium">
+            <summary className="cursor-pointer hover:bg-purple-200 font-medium">
               Unread Notifications ({unreadNotificationCount || 0})
             </summary>
             <ul className="list-disc list-inside mt-2 text-sm">
@@ -124,7 +124,7 @@ export default function UserPage({ userId }) {
           </details>
 
           <details>
-            <summary className="cursor-pointer font-medium">
+            <summary className="cursor-pointer hover:bg-purple-200  font-medium">
               Read Notifications ({readNotificationsCount || 0})
             </summary>
             <ul className="list-disc list-inside mt-2 text-sm">
@@ -137,7 +137,7 @@ export default function UserPage({ userId }) {
 
         <div className="mt-3">
           <details>
-            <summary className="cursor-pointer font-medium">
+            <summary className="cursor-pointer hover:bg-purple-200  font-medium">
               Broadcasted Notifications ({broadcastMessages?.length || 0})
             </summary>
             <ul className="list-disc list-inside mt-2 text-sm">
@@ -153,7 +153,7 @@ export default function UserPage({ userId }) {
 
         <div className="mt-3">
           <details>
-            <summary className="cursor-pointer font-medium">
+            <summary className="cursor-pointer hover:bg-purple-200  font-medium">
               Broadcast Message to All Users
             </summary>
             <ul className="list-disc list-inside mt-2 text-sm space-y-3">
