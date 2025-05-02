@@ -14,28 +14,14 @@ const Header = () => {
 
         <nav>
           <ul className="flex space-x-4">
-            {user ? (
+            {user && (
               <>
-                <li>
-                  <Link
-                    href={`/user/${user.username}`}
-                    className="hover:text-purple-200"
-                  >
-                    Profile
-                  </Link>
-                </li>
                 <li>
                   <button onClick={logout} className="hover:text-purple-200">
                     Logout
                   </button>
                 </li>
               </>
-            ) : (
-              <li>
-                <Link href="/" className="hover:text-purple-200">
-                  Home
-                </Link>
-              </li>
             )}
           </ul>
         </nav>

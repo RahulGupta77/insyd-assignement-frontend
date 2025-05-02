@@ -15,7 +15,7 @@ ApiClient.interceptors.request.use(
     // Add authorization token if available
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.token = token;
     }
     return config;
   },
@@ -29,7 +29,7 @@ ApiClient.interceptors.response.use(
     // Handle errors globally
     if (error.response?.status === 401) {
       // Handle unauthorized access (e.g., redirect to login)
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
     }
     return Promise.reject(error.response?.data || error.message);
   }
