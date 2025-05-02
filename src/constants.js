@@ -1,4 +1,4 @@
-export const ROOT_BACKEND_URL = "http://localhost:8000/v1";
+export const ROOT_BACKEND_URL = "https://insydai.rahulgupta.tech/api/v1";
 
 export const broadcastMessageTemplates = [
   {
