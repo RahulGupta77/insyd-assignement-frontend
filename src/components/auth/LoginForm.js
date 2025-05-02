@@ -123,11 +123,11 @@ const LoginForm = ({ onToggleForm }) => {
         <div className="pt-2">
           <button
             onClick={(e) => handleSubmit(e)}
-            className="w-full px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70"
+            className="w-full px-4 cursor-pointer py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <span className="flex items-center justify-center">
+              <span className="flex  items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                   xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +161,7 @@ const LoginForm = ({ onToggleForm }) => {
           <button
             type="button"
             onClick={() => onToggleForm && onToggleForm(false)}
-            className="text-purple-600 font-medium hover:text-purple-800"
+            className="text-purple-600 cursor-pointer font-medium hover:text-purple-800"
           >
             Sign up
           </button>

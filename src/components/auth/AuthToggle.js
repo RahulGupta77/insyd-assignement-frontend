@@ -12,7 +12,7 @@ const AuthToggle = () => {
       {/* Tab Buttons */}
       <div className="grid grid-cols-2">
         <button
-          className={`py-4 text-center font-medium transition-colors duration-300 ${
+          className={`py-4 cursor-pointer text-center font-medium transition-colors duration-300 ${
             isLogin
               ? "text-purple-600 border-b-2 border-purple-600"
               : "text-gray-500 hover:text-gray-700 border-white"
@@ -22,7 +22,7 @@ const AuthToggle = () => {
           Login
         </button>
         <button
-          className={`py-4 text-center font-medium transition-colors duration-300 ${
+          className={`py-4 cursor-pointer text-center font-medium transition-colors duration-300 ${
             !isLogin
               ? "text-purple-600 border-b-2 border-purple-600"
               : "text-gray-500 hover:text-gray-700 border-white"

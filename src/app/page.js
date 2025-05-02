@@ -28,7 +28,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center">
+    <div className="min-h-[60vh]  flex flex-col items-center justify-center">
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold mb-4">Welcome to Insyd</h1>
       </div>

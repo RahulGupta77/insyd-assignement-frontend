@@ -148,7 +148,7 @@ const SignupForm = ({ onSuccess, onToggleForm }) => {
         <div className="pt-2">
           <button
             onClick={(e) => handleSubmit(e)}
-            className="w-full px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70"
+            className="w-full px-4 cursor-pointer py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -186,7 +186,7 @@ const SignupForm = ({ onSuccess, onToggleForm }) => {
           <button
             type="button"
             onClick={() => onToggleForm && onToggleForm(true)}
-            className="text-purple-600 font-medium hover:text-purple-800"
+            className="text-purple-600 cursor-pointer font-medium hover:text-purple-800"
           >
             Log in
           </button>

@@ -6,7 +6,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 
 export const metadata = {
-  title: "Notification App",
+  title: "Assignment-Insyd",
   description: "Insyd Assignment for Notification Design",
 };
 

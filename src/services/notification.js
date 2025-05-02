@@ -37,3 +37,14 @@ export const getBroadcastedMessages = async () => {
     throw new Error(error.message || "Cant fetch Broadcasted Messages");
   }
 };
+
+export const sendBroadcastedMessage = async (notificationTemplateId) => {
+  try {
+    const response = await ApiClient.post("/users/broadcast", {
+      notificationTemplateId,
+    });
+    return response;
+  } catch (error) {
+    throw new Error(error.message || "Cant fetch Broadcasted Messages");
+  }
+};

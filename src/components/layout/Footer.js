@@ -14,7 +14,11 @@ const Footer = () => {
             >
               My Portfolio
             </a>
-            <a href="#" className="hover:text-purple-400">
+            <a
+              href="https://github.com/RahulGupta77/insyd-assignement-frontend"
+              className="hover:text-purple-400"
+              target="_blank"
+            >
               Github Repository
             </a>
             <a href="#" className="hover:text-purple-400">
