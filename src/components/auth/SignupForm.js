@@ -1,6 +1,8 @@
 "use client";
 
+import authService from "@/services/auth";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth";
 import {
   validateConfirmPassword,
@@ -58,7 +60,7 @@ const SignupForm = ({ onSuccess, onToggleForm }) => {
     return !Object.values(newErrors).some((error) => error);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -67,34 +69,20 @@ const SignupForm = ({ onSuccess, onToggleForm }) => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      try {
-        // In a real app, you would send this data to a backend
-        signup({
-          username: formData.username,
-          // Don't include password in user object for security
-        });
+    try {
+      const response = await authService.signup(
+        formData.username,
+        formData.password
+      );
 
-        // Form submission successful
-        setFormData({
-          username: "",
-          password: "",
-          confirmPassword: "",
-        });
-
-        // Optionally switch to login after successful signup
-        if (onSuccess) {
-          onSuccess();
-        }
-      } catch (error) {
-        setErrors({
-          general: "Failed to sign up. Please try again.",
-        });
-      } finally {
-        setIsSubmitting(false);
-      }
-    }, 1000);
+      toast.success(response?.message);
+      onSuccess();
+      setFormData({ username: "", password: "", confirmPassword: "" });
+    } catch (error) {
+      toast.error("Failed to sign up. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -159,7 +147,7 @@ const SignupForm = ({ onSuccess, onToggleForm }) => {
 
         <div className="pt-2">
           <button
-            onClick={handleSubmit}
+            onClick={(e) => handleSubmit(e)}
             className="w-full px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70"
             disabled={isSubmitting}
           >

@@ -1,6 +1,9 @@
 "use client";
 
+import authService from "@/services/auth";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth";
 import { validatePassword, validateUsername } from "../../utils/validation";
 import PasswordInput from "./PasswordInput";
@@ -13,6 +16,7 @@ const LoginForm = ({ onToggleForm }) => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,7 +43,7 @@ const LoginForm = ({ onToggleForm }) => {
     return !Object.values(newErrors).some((error) => error);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -48,24 +52,25 @@ const LoginForm = ({ onToggleForm }) => {
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      try {
-        login({
-          username: formData.username,
-        });
+    try {
+      const response = await authService.login(
+        formData.username,
+        formData.password
+      );
 
-        setFormData({
-          username: "",
-          password: "",
-        });
-      } catch (error) {
-        setErrors({
-          general: "Failed to login. Please try again.",
-        });
-      } finally {
-        setIsSubmitting(false);
+      toast.success(response?.message);
+      localStorage.setItem("user", JSON.stringify(response?.user));
+      setFormData({ username: "", password: "" });
+      const userId = response?.user?.id;
+
+      if (userId) {
+        router.push(`/user/${userId}`);
       }
-    }, 1000);
+    } catch (error) {
+      toast.error("Failed to sign up. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -117,7 +122,7 @@ const LoginForm = ({ onToggleForm }) => {
 
         <div className="pt-2">
           <button
-            onClick={handleSubmit}
+            onClick={(e) => handleSubmit(e)}
             className="w-full px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70"
             disabled={isSubmitting}
           >

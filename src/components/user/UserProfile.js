@@ -1,10 +1,6 @@
 "use client";
 
-import { useAuth } from "../../hooks/useAuth";
-
-const UserProfile = ({ username }) => {
-  const { user } = useAuth();
-
+const UserProfile = ({ user, username }) => {
   // Check if the logged-in user matches the profile being viewed
   const isCurrentUser = user && user.username === username;
 
@@ -16,9 +12,9 @@ const UserProfile = ({ username }) => {
         </div>
         <div>
           <h1 className="text-2xl font-bold">{username}</h1>
-          {user?.email && isCurrentUser && (
+          {/* {user?.email && isCurrentUser && (
             <p className="text-gray-600">{user.email}</p>
-          )}
+          )} */}
         </div>
       </div>
 
@@ -31,13 +27,13 @@ const UserProfile = ({ username }) => {
               <p className="text-gray-600">Username</p>
               <p className="font-medium">{user.username}</p>
             </div>
-
+            {/* 
             {user.email && (
               <div className="border-b pb-4">
                 <p className="text-gray-600">Email</p>
                 <p className="font-medium">{user.email}</p>
               </div>
-            )}
+            )} */}
 
             <div className="pt-4">
               <button className="btn btn-primary">Edit Profile</button>

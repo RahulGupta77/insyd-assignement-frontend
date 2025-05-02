@@ -5,7 +5,6 @@ import { useAuth } from "../../hooks/useAuth";
 
 const Header = () => {
   const { user, logout } = useAuth();
-
   return (
     <header className="bg-purple-800 text-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
