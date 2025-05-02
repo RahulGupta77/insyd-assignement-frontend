@@ -7,8 +7,12 @@ const Footer = () => {
             <p>© {new Date().getFullYear()} Insyd. All rights reserved.</p>
           </div>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-purple-400">
-              Developer&apos;s Profile
+            <a
+              href="https://www.rahulgupta.tech"
+              target="_blank"
+              className="hover:text-purple-400"
+            >
+              My Portfolio
             </a>
             <a href="#" className="hover:text-purple-400">
               Github Repository

@@ -28,3 +28,12 @@ export const markAllRead = async (notificationIds) => {
     throw new Error(error.message || "Cant fetch the Unread Notification");
   }
 };
+
+export const getBroadcastedMessages = async () => {
+  try {
+    const response = await ApiClient.get("/users/broadcast");
+    return response;
+  } catch (error) {
+    throw new Error(error.message || "Cant fetch Broadcasted Messages");
+  }
+};

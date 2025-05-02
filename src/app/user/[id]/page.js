@@ -3,6 +3,7 @@
 import { getConnections, sendConnectRequest } from "@/services/connections";
 import { getCurrentUserLikes, likeProfile } from "@/services/likes";
 import {
+  getBroadcastedMessages,
   getNotifications,
   getUnreadNotificationCount,
   markAllRead,
@@ -28,10 +29,11 @@ export default function UserPage() {
   const [readNotification, setReadNotification] = useState([]);
   const [userLikeConnectionTrigger, setUserLikeConnectionTrigger] =
     useState(false);
-
   const [likesNotificationTrigger, setLikesNotificationTrigger] =
     useState(false);
+  const [broadcastMessages, setBroadcastedMessages] = useState([]);
 
+  // Load user from localStorage on mount
   useEffect(() => {
     const localStorageUser = localStorage.getItem("user");
     if (localStorageUser) {
@@ -39,14 +41,16 @@ export default function UserPage() {
     }
   }, []);
 
+  // Polling trigger for likes, connections, and broadcast messages
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setLikesNotificationTrigger((prev) => !prev); // toggle trigger
-    }, 5000); // every 5 seconds
+      setLikesNotificationTrigger((prev) => !prev); // Toggle trigger
+    }, 15000); // Every 15 seconds
 
-    return () => clearInterval(intervalId); // cleanup on unmount
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);
 
+  // Fetch all user profiles
   useEffect(() => {
     const getAllUsers = async () => {
       try {
@@ -62,27 +66,62 @@ export default function UserPage() {
               return res.user;
             } catch (err) {
               console.error("Error fetching profile for:", user._id);
-              return null; // or fallback user object
+              return null; // Fallback
             }
           })
         );
 
-        // Step 3: Filter out any nulls (in case of failed fetches)
+        // Step 3: Filter out nulls and update only if changed
         const validProfiles = profiles.filter(Boolean);
-        setAllUserProfiles(validProfiles);
+        if (
+          validProfiles.length !== allUserProfiles.length ||
+          JSON.stringify(validProfiles) !== JSON.stringify(allUserProfiles)
+        ) {
+          setAllUserProfiles(validProfiles);
+        }
+        // For deeper comparison, use: if (!_.isEqual(validProfiles, allUserProfiles))
       } catch (error) {
         toast.error("Unable to fetch all users");
       }
     };
 
     getAllUsers();
-  }, [userLikeConnectionTrigger]);
+  }, [userLikeConnectionTrigger, allUserProfiles]);
 
+  // Fetch broadcasted messages
+  useEffect(() => {
+    const getBroadcastedMessagesFromServer = async () => {
+      try {
+        const response = await getBroadcastedMessages();
+        const newBroadcasts = response?.broadcasts || [];
+
+        // Update only if broadcasts have changed
+        if (
+          newBroadcasts.length !== broadcastMessages.length ||
+          JSON.stringify(newBroadcasts) !== JSON.stringify(broadcastMessages)
+        ) {
+          setBroadcastedMessages(newBroadcasts);
+        }
+        // For deeper comparison, use: if (!_.isEqual(newBroadcasts, broadcastMessages))
+      } catch (error) {
+        toast.error("Unable to fetch Broadcasted Messages");
+      }
+    };
+
+    getBroadcastedMessagesFromServer();
+  }, [likesNotificationTrigger, broadcastMessages]);
+
+  // Fetch likes and connections
   useEffect(() => {
     const getLikesCount = async () => {
       try {
         const response = await getCurrentUserLikes();
-        setTotalLikes(response?.users?.length || 0);
+        const newLikesCount = response?.users?.length || 0;
+
+        // Update only if likes count has changed
+        if (newLikesCount !== totalLikes) {
+          setTotalLikes(newLikesCount);
+        }
       } catch (error) {
         toast.error("Unable to fetch likes");
       }
@@ -91,7 +130,16 @@ export default function UserPage() {
     const getConnectionsFromServer = async () => {
       try {
         const response = await getConnections();
-        setTotalConnections(response?.connections || []);
+        const newConnections = response?.connections || [];
+
+        // Update only if connections have changed
+        if (
+          newConnections.length !== totalConnections.length ||
+          JSON.stringify(newConnections) !== JSON.stringify(totalConnections)
+        ) {
+          setTotalConnections(newConnections);
+        }
+        // For deeper comparison, use: if (!_.isEqual(newConnections, totalConnections))
       } catch (error) {
         toast.error("Unable to fetch Connection");
       }
@@ -99,34 +147,54 @@ export default function UserPage() {
 
     getConnectionsFromServer();
     getLikesCount();
-  }, [likesNotificationTrigger]);
+  }, [likesNotificationTrigger, totalLikes, totalConnections]);
 
+  // Fetch notifications and unread count
   useEffect(() => {
     const getNotificationsFromServer = async () => {
       try {
         const response = await getNotifications();
-        const totalNotifications = response?.notifications || [];
-        setAllNotifications(totalNotifications);
-        setUnreadNotfications(totalNotifications.filter((n) => !n?.isRead));
-        setReadNotification(totalNotifications.filter((n) => n?.isRead));
+        const newNotifications = response?.notifications || [];
+
+        // Update only if notifications have changed
+        if (
+          newNotifications.length !== allNotifications.length ||
+          JSON.stringify(newNotifications) !== JSON.stringify(allNotifications)
+        ) {
+          setAllNotifications(newNotifications);
+          setUnreadNotfications(newNotifications.filter((n) => !n?.isRead));
+          setReadNotification(newNotifications.filter((n) => n?.isRead));
+        }
+        // For deeper comparison, use: if (!_.isEqual(newNotifications, allNotifications))
       } catch (error) {
-        toast.error("Unable to fetch Connection");
+        toast.error("Unable to fetch Notifications");
       }
     };
 
     const getUnreadNotificationsCountFromServer = async () => {
       try {
         const response = await getUnreadNotificationCount();
-        setUnreadNotificationCount(response?.unreadCount || 0);
+        const newUnreadCount = response?.unreadCount || 0;
+
+        // Update only if unread count has changed
+        if (newUnreadCount !== unreadNotificationCount) {
+          setUnreadNotificationCount(newUnreadCount);
+        }
       } catch (error) {
-        toast.error("Unable to fetch Connection");
+        toast.error("Unable to fetch Unread Notification Count");
       }
     };
 
     getUnreadNotificationsCountFromServer();
     getNotificationsFromServer();
-  }, [notificationTrigger, likesNotificationTrigger]);
+  }, [
+    notificationTrigger,
+    likesNotificationTrigger,
+    allNotifications,
+    unreadNotificationCount,
+  ]);
 
+  // Mark all unread notifications as read
   const markUnreadMessages = async () => {
     const allNotificationIds = unreadNotifications.map((n) => n.id);
 
@@ -143,10 +211,11 @@ export default function UserPage() {
         toast.success("Marked all unread notifications as read");
       }
     } catch (error) {
-      toast.error("Unable to Mark notifcation as read");
+      toast.error("Unable to Mark notification as read");
     }
   };
 
+  // Like a profile
   const makeLike = async (userId) => {
     try {
       const response = await likeProfile(userId);
@@ -159,15 +228,13 @@ export default function UserPage() {
     }
   };
 
+  // Send connection request
   const makeConnection = async (userId) => {
     try {
       const response = await sendConnectRequest(userId);
 
       if (response?.success) {
         setUserLikeConnectionTrigger((prev) => !prev);
-      }
-
-      if (response?.success) {
         toast.success("Connection invite sent!");
       }
     } catch (error) {
@@ -197,11 +264,10 @@ export default function UserPage() {
           />
           <h2 className="text-xl font-bold mt-2">{user?.username}</h2>
           <p className="mt-1 text-sm">❤️ Likes: {totalLikes}</p>
+          <p className="text-sm">🔗 Connections: {0}</p>
           <p className="text-sm">
-            🔗 Connections: {totalConnections?.length || 0}
-          </p>
-          <p className="text-sm">
-            🔔 Notifications: {allNotifications?.length || 0}
+            🔔 Notifications:{" "}
+            {(allNotifications?.length || 0) + (broadcastMessages?.length + 0)}
           </p>
         </div>
 
@@ -210,7 +276,7 @@ export default function UserPage() {
             onClick={() => markUnreadMessages()}
             className="bg-purple-600 text-sm cursor-pointer mx-auto  text-white px-2 py-1 rounded-sm shadow hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
           >
-            Mark All as Read
+            Mark Unread as Read
           </button>
         </div>
 
@@ -237,6 +303,22 @@ export default function UserPage() {
             <ul className="list-disc list-inside mt-2 text-sm">
               {readNotification?.map((n) => (
                 <li key={n.id}>{n.message}</li>
+              ))}
+            </ul>
+          </details>
+        </div>
+
+        <div className="mt-3">
+          <details>
+            <summary className="cursor-pointer font-medium">
+              Broadcasted Notifications ({broadcastMessages?.length || 0})
+            </summary>
+            <ul className="list-disc list-inside mt-2 text-sm">
+              {broadcastMessages?.map((n) => (
+                <li className=" mt-3" key={n._id}>
+                  <span className="text-xs">{n.message}</span> -Sent By{" "}
+                  {n?.fromUser?.username}
+                </li>
               ))}
             </ul>
           </details>

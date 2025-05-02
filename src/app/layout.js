@@ -6,8 +6,8 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 
 export const metadata = {
-  title: "Authentication App",
-  description: "A Next.js application with authentication",
+  title: "Notification App",
+  description: "Insyd Assignment for Notification Design",
 };
 
 export default function RootLayout({ children }) {
