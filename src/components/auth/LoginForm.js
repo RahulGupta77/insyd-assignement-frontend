@@ -67,7 +67,7 @@ const LoginForm = ({ onToggleForm }) => {
         router.push(`/user/${userId}`);
       }
     } catch (error) {
-      toast.error("Failed to sign up. Please try again.");
+      toast.error("Failed to login. Please signup first.");
     } finally {
       setIsSubmitting(false);
     }
