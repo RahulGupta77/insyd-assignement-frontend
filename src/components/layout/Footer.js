@@ -21,7 +21,11 @@ const Footer = () => {
             >
               Github Repository
             </a>
-            <a href="#" className="hover:text-purple-400">
+            <a
+              target="_blank"
+              href="https://www.notion.so/Insyd-Notification-System-Design-Document-1e8323f2c3a880c19158d88481442889?pvs=4"
+              className="hover:text-purple-400"
+            >
               System Design Doc
             </a>
           </div>
